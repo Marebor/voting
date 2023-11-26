@@ -1,0 +1,60 @@
+<div class="card px-2 h-100">
+  <h5 class="text-center my-3">
+    Candidates
+    <a class="btn right-side" data-bs-toggle="modal" data-bs-target="#newCandidateModal" (click)="onModalOpened()">
+      <i class="fa fa-lg fa-plus-circle text-success"></i>
+    </a>
+  </h5>
+  <table *ngIf="candidates; else loading"  class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let candidate of candidates">
+        <td>{{candidate.name}}</td>
+        <td>{{candidate.votesCount}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="candidates?.length === 0" class="text-center font-italic my-4">
+    No candidates yet
+  </div>
+  
+  <div class="modal" tabindex="-1" id="newCandidateModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div *ngIf="!addCandidateCommandResult?.succeeded" class="modal-header">
+          <h5 class="modal-title">Add new candidate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input *ngIf="!addCandidateCommandResult?.succeeded; else confirmation" class="form-control" type="text" placeholder="Candidate name" 
+            [disabled]="addingNewCandidate" [(ngModel)]="newCandidateName">
+          <div *ngIf="addCandidateCommandResult?.error" class="text-danger">
+            {{addCandidateCommandResult!.error}}
+          </div>
+          <ng-template #confirmation>
+            <div class="text-center">
+              <i class="fa fa-check-circle-o fa-2x text-success"></i> Candidate added!
+            </div>
+          </ng-template>
+        </div>
+        <div *ngIf="!addCandidateCommandResult?.succeeded" class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addingNewCandidate || !newCandidateName || newCandidateName.length < 1 || addingNewCandidate" (click)="addCandidate()">
+            Add
+            <i *ngIf="addingNewCandidate" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center my-4">
+    <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
+  </div>
+</ng-template>

@@ -1,0 +1,27 @@
+<div class="card px-2 py-4 w-100">
+  <div *ngIf="voters && candidates; else loading" class="text-center">
+    I am
+    <select class="mx-2" [(ngModel)]="selectedVoterName">
+      <option [value]="undefined">-</option>
+      <option *ngFor="let voter of voters" [value]="voter.name">{{voter.name}}</option>
+    </select>
+    and I vote for
+    <select class="mx-2" [(ngModel)]="selectedCandidateName">
+      <option [value]="undefined">-</option>
+      <option *ngFor="let candidate of candidates" [value]="candidate.name">{{candidate.name}}</option>
+    </select>
+    <button class="btn btn-sm btn-primary right-side" [disabled]="!selectedCandidateName || !selectedVoterName || addingVote" (click)="vote()">
+      Submit!
+      <i *ngIf="addingVote" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+    </button>
+  </div>
+  <div *ngIf="addVoteCommandResult" [class]="addVoteCommandResult.succeeded ? 'text-success' : 'text-danger'" class="text-center mt-2">
+    {{ addVoteCommandResult.succeeded ? 'You have sucessfully voted.' : addVoteCommandResult.error }}
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center my-4">
+    <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
+  </div>
+</ng-template>
